@@ -26,6 +26,7 @@ btnRoll.addEventListener("click", () => {
     currentScore = 0;
     setCurrentPlayerPartialScore(currentPlayer, currentScore);
     changeCurrentPlayer();
+    setCurrentPlayerStyle(currentPlayer);
   }
 });
 
@@ -36,6 +37,7 @@ btnHold.addEventListener("click", () => {
     setCurrentPlayerPartialScore(currentPlayer, currentScore);
     setCurrentPlayerTotalScore(currentPlayer, playesScores[currentPlayer]);
     changeCurrentPlayer();
+    setCurrentPlayerStyle(currentPlayer);
   }
 });
 
@@ -59,6 +61,14 @@ const showDice = (selector, diceFace) => {
 
 const changeCurrentPlayer = () => {
   currentPlayer = currentPlayer === 0 ? 1 : 0;
+};
+
+const setCurrentPlayerStyle = (currentPlayer) => {
+  [0, 1].forEach((player) => {
+    document
+      .querySelector(`.player--${player}`)
+      .classList.toggle("player--active", player === currentPlayer);
+  });
 };
 
 const setCurrentPlayerPartialScore = (currentPlayer, currentScore) => {
