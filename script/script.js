@@ -36,7 +36,10 @@ btnHold.addEventListener("click", () => {
     currentScore = 0;
     setCurrentPlayerPartialScore(currentPlayer, currentScore);
     setCurrentPlayerTotalScore(currentPlayer, playersScores[currentPlayer]);
-    if (playersScores[currentPlayer] >= 20) setPlayerWinner(currentPlayer);
+    if (playersScores[currentPlayer] >= 20) {
+      setPlayerWinner(currentPlayer);
+      setButtonsDisabled(true);
+    }
     changeCurrentPlayer();
     setCurrentPlayerStyle(currentPlayer);
   }
@@ -52,6 +55,7 @@ btnNew.addEventListener("click", () => {
   setCurrentPlayerTotalScore(0, 0);
   setCurrentPlayerTotalScore(1, 0);
   setCurrentPlayerStyle(currentPlayer);
+  setButtonsDisabled(false);
 });
 
 function setTotalsScoresToZero() {
@@ -97,4 +101,9 @@ const setPlayerWinner = (currentPlayer) => {
   document
     .querySelector(`.player--${currentPlayer}`)
     .classList.add("player--winner");
+};
+
+const setButtonsDisabled = (isDisabled) => {
+  btnHold.disabled = isDisabled;
+  btnRoll.disabled = isDisabled;
 };
