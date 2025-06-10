@@ -10,7 +10,7 @@ setTotalsScoresToZero();
 
 hiddenDice(dice);
 
-const playesScores = [0, 0];
+const playersScores = [0, 0];
 let currentScore = 0;
 let currentPlayer = 0;
 
@@ -32,13 +32,26 @@ btnRoll.addEventListener("click", () => {
 
 btnHold.addEventListener("click", () => {
   if (currentScore > 0) {
-    playesScores[currentPlayer] += currentScore;
+    playersScores[currentPlayer] += currentScore;
     currentScore = 0;
     setCurrentPlayerPartialScore(currentPlayer, currentScore);
-    setCurrentPlayerTotalScore(currentPlayer, playesScores[currentPlayer]);
+    setCurrentPlayerTotalScore(currentPlayer, playersScores[currentPlayer]);
+    if (playersScores[currentPlayer] >= 20) setPlayerWinner(currentPlayer);
     changeCurrentPlayer();
     setCurrentPlayerStyle(currentPlayer);
   }
+});
+
+btnNew.addEventListener("click", () => {
+  playersScores[0] = 0;
+  playersScores[1] = 0;
+  currentPlayer = 0;
+  currentPlayer = 0;
+  setCurrentPlayerPartialScore(0, 0);
+  setCurrentPlayerPartialScore(1, 0);
+  setCurrentPlayerTotalScore(0, 0);
+  setCurrentPlayerTotalScore(1, 0);
+  setCurrentPlayerStyle(currentPlayer);
 });
 
 function setTotalsScoresToZero() {
@@ -78,4 +91,10 @@ const setCurrentPlayerPartialScore = (currentPlayer, currentScore) => {
 
 const setCurrentPlayerTotalScore = (currentPlayer, totalScore) => {
   document.getElementById(`score--${currentPlayer}`).textContent = totalScore;
+};
+
+const setPlayerWinner = (currentPlayer) => {
+  document
+    .querySelector(`.player--${currentPlayer}`)
+    .classList.add("player--winner");
 };
