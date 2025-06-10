@@ -1,48 +1,71 @@
 "use strict";
 
-let playerOneScore = 0;
-let playerTwoScore = 0;
-
-const totalScoreOne = document.getElementById("score--0");
-const totalScoreTwo = document.getElementById("score--1");
-
-const currentScoreOne = document.getElementById("current--0");
-
 const btnNew = document.querySelector(".btn--new");
 const btnRoll = document.querySelector(".btn--roll");
 const btnHold = document.querySelector(".btn--hold");
 
 const dice = document.querySelector(".dice");
 
-totalScoreOne.textContent = playerOneScore;
-totalScoreTwo.textContent = playerTwoScore;
+setTotalsScoresToZero();
 
-dice.classList.add("hidden");
-
-const getRandonDiceFaceNumber = () => {
-  return Math.trunc(Math.random() * 6) + 1;
-};
+hiddenDice(dice);
 
 const playesScores = [0, 0];
 let currentScore = 0;
 let currentPlayer = 0;
 
 btnRoll.addEventListener("click", () => {
-  // Get randon dice face
   let diceFace = getRandonDiceFaceNumber();
 
-  // Show new dice face
-  dice.classList.remove("hidden");
-  dice.src = `./assets/dice-${diceFace}.png`;
+  showDice(dice, diceFace);
 
-  // Check dice face is diferent from 1
   if (diceFace !== 1) {
-    // Add dice face to the current score
     currentScore += diceFace;
-    currentScoreOne.textContent = currentScore;
+    setCurrentPlayerPartialScore(currentPlayer, currentScore);
   } else {
-    // Remove current score
     currentScore = 0;
-    // Change player
+    setCurrentPlayerPartialScore(currentPlayer, currentScore);
+    changeCurrentPlayer();
   }
 });
+
+btnHold.addEventListener("click", () => {
+  if (currentScore > 0) {
+    playesScores[currentPlayer] += currentScore;
+    currentScore = 0;
+    setCurrentPlayerPartialScore(currentPlayer, currentScore);
+    setCurrentPlayerTotalScore(currentPlayer, playesScores[currentPlayer]);
+    changeCurrentPlayer();
+  }
+});
+
+function setTotalsScoresToZero() {
+  document.getElementById("score--0").textContent = 0;
+  document.getElementById("score--1").textContent = 0;
+}
+
+const getRandonDiceFaceNumber = () => {
+  return Math.trunc(Math.random() * 6) + 1;
+};
+
+function hiddenDice(selector) {
+  selector.classList.add("hidden");
+}
+
+const showDice = (selector, diceFace) => {
+  selector.classList.remove("hidden");
+  selector.src = `./assets/dice-${diceFace}.png`;
+};
+
+const changeCurrentPlayer = () => {
+  currentPlayer = currentPlayer === 0 ? 1 : 0;
+};
+
+const setCurrentPlayerPartialScore = (currentPlayer, currentScore) => {
+  document.getElementById(`current--${currentPlayer}`).textContent =
+    currentScore;
+};
+
+const setCurrentPlayerTotalScore = (currentPlayer, totalScore) => {
+  document.getElementById(`score--${currentPlayer}`).textContent = totalScore;
+};
