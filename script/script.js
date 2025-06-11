@@ -10,6 +10,8 @@ setTotalsScoresToZero();
 
 hiddenDice(dice);
 
+const players = [0, 1];
+
 const playersScores = [0, 0];
 let currentScore = 0;
 let currentPlayer = 0;
@@ -39,25 +41,29 @@ btnHold.addEventListener("click", () => {
     if (playersScores[currentPlayer] >= 20) {
       setPlayerWinner(currentPlayer, true);
       setButtonsDisabled(true);
+      hiddenDice(dice);
     }
     changeCurrentPlayer();
     setCurrentPlayerStyle(currentPlayer);
   }
 });
 
-btnNew.addEventListener("click", () => {
+btnNew.addEventListener("click", resetGame);
+
+function resetGame() {
   playersScores[0] = 0;
   playersScores[1] = 0;
+  currentScore = 0;
   currentPlayer = 0;
-  currentPlayer = 0;
-  setCurrentPlayerPartialScore(0, 0);
-  setCurrentPlayerPartialScore(1, 0);
-  setCurrentPlayerTotalScore(0, 0);
-  setCurrentPlayerTotalScore(1, 0);
+  players.forEach((player) => {
+    setCurrentPlayerPartialScore(player, 0);
+    setCurrentPlayerTotalScore(player, 0);
+    setPlayerWinner(player, false);
+  });
   setCurrentPlayerStyle(currentPlayer);
   setButtonsDisabled(false);
-  [0, 1].forEach((player) => setPlayerWinner(player, false));
-});
+  hiddenDice(dice);
+}
 
 function setTotalsScoresToZero() {
   document.getElementById("score--0").textContent = 0;
@@ -68,13 +74,13 @@ const getRandonDiceFaceNumber = () => {
   return Math.trunc(Math.random() * 6) + 1;
 };
 
-function hiddenDice(selector) {
-  selector.classList.add("hidden");
+function hiddenDice(diceElement) {
+  diceElement.classList.add("hidden");
 }
 
-const showDice = (selector, diceFace) => {
-  selector.classList.remove("hidden");
-  selector.src = `./assets/dice-${diceFace}.png`;
+const showDice = (diceElement, diceFace) => {
+  diceElement.classList.remove("hidden");
+  diceElement.src = `./assets/dice-${diceFace}.png`;
 };
 
 const changeCurrentPlayer = () => {
@@ -82,7 +88,7 @@ const changeCurrentPlayer = () => {
 };
 
 const setCurrentPlayerStyle = (currentPlayer) => {
-  [0, 1].forEach((player) => {
+  players.forEach((player) => {
     document
       .querySelector(`.player--${player}`)
       .classList.toggle("player--active", player === currentPlayer);
